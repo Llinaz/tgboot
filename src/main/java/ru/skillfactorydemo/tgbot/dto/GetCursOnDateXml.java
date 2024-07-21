@@ -12,6 +12,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 @XmlAccessorType(XmlAccessType.FIELD)
 @Data
 public class GetCursOnDateXml {
+
     @XmlElement(name = "On_date", required = true, namespace = "http://web.cbr.ru/")
     protected XMLGregorianCalendar onDate;
 }

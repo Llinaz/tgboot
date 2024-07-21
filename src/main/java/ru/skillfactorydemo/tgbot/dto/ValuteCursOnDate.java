@@ -11,6 +11,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "ValuteCursOnDate")
 @Data
 public class ValuteCursOnDate {
+
     @XmlElement(name = "Vname")
     private String name;
 

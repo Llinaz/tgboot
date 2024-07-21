@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 public class FinanceService {
 
     private static final String ADD_INCOME = "/addincome";
+
     private final IncomeRepository incomeRepository;
     private final SpendRepository spendRepository;
 

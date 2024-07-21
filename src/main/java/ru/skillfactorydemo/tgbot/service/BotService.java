@@ -32,16 +32,16 @@ public class BotService extends TelegramLongPollingBot {
     private static final String ADD_SPEND = "/addspend";
 
     private final CentralRussianBankService centralRussianBankService;
-    private FinanceService financeService;
+    private final FinanceService financeService;
     private final ActiveChatRepository activeChatRepository;
+    private Map<Long, List<String>> previousCommands = new ConcurrentHashMap<>();
+
 
     @Value("${bot.api.key}")
     private String apiKey;
 
     @Value("${bot.name}")
     private String name;
-
-    private Map<Long, List<String>> previousCommands = new ConcurrentHashMap<>();
 
     @Override
     public void onUpdateReceived(Update update) {
@@ -53,8 +53,10 @@ public class BotService extends TelegramLongPollingBot {
 
             if (CURRENT_RATES.equalsIgnoreCase(message.getText())) {
                 for (ValuteCursOnDate valuteCursOnDate : centralRussianBankService.getCurrenciesFromCbr()) {
-                    response.setText(StringUtils.defaultIfBlank(response.getText(), "") +
-                            valuteCursOnDate.getName() + " - " + valuteCursOnDate.getCourse() + "\n");
+                    response.setText(StringUtils.defaultIfBlank(response.getText(), "")
+                            + valuteCursOnDate.getName() + " (" + valuteCursOnDate.getChCode() + ") nominal: "
+                            + valuteCursOnDate.getNominal() + " - "
+                            + valuteCursOnDate.getCourse() + "\n");
                 }
             } else if (ADD_INCOME.equalsIgnoreCase(message.getText())) {
                 response.setText("Отправьте мне сумму полученного дохода");
@@ -116,7 +118,7 @@ public class BotService extends TelegramLongPollingBot {
     }
 
     private String getPreviousCommand(Long chatId) {
-        return previousCommands.get(chatId).
-                get(previousCommands.get(chatId).size() - 1);
+        return previousCommands.get(chatId)
+                .get(previousCommands.get(chatId).size() - 1);
     }
 }

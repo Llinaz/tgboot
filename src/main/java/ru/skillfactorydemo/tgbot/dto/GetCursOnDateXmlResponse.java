@@ -11,6 +11,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 @Data
 public class GetCursOnDateXmlResponse {
+
     @XmlElement(name = "GetCursOnDateXMLResult", namespace = "http://web.cbr.ru/")
     private GetCursOnDateXmlResult getCursOnDateXmlResult;
 }

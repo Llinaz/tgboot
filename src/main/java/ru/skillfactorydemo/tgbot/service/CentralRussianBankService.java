@@ -1,7 +1,6 @@
 package ru.skillfactorydemo.tgbot.service;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import ru.skillfactorydemo.tgbot.dto.GetCursOnDateXml;
 import ru.skillfactorydemo.tgbot.dto.GetCursOnDateXmlResponse;
@@ -15,6 +14,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 public class CentralRussianBankService extends WebServiceTemplate {
+
     @Value("${cbr.api.url}")
     private String cbrApiUrl;
 
@@ -26,6 +26,7 @@ public class CentralRussianBankService extends WebServiceTemplate {
         XMLGregorianCalendar xmlGregorianCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar);
         getCursOnDateXML.setOnDate(xmlGregorianCalendar);
 
+        System.out.println(getCursOnDateXML);
         GetCursOnDateXmlResponse response = (GetCursOnDateXmlResponse) marshalSendAndReceive(cbrApiUrl, getCursOnDateXML);
 
         if (response == null) {
@@ -35,5 +36,9 @@ public class CentralRussianBankService extends WebServiceTemplate {
         final List<ValuteCursOnDate> courses = response.getGetCursOnDateXmlResult().getValuteData();
         courses.forEach(course -> course.setName(course.getName().trim()));
         return courses;
+    }
+
+    public ValuteCursOnDate getCourseForCurrency(String code) throws DatatypeConfigurationException {
+        return getCurrenciesFromCbr().stream().filter(currency -> code.equals(currency.getChCode())).findFirst().get();
     }
 }
